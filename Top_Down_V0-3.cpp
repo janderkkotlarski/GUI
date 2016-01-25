@@ -310,8 +310,25 @@ void show_circle_ent(sf::RenderWindow& window, const circle_entity& circlent)
 struct circle_collection
 {
 	
+	float m_value{100.0f};
 	
+	float m_norm_radius{20.0f};
 	
+	const float m_text_size{20.0f};
+	
+	const std::string m_name{"Name"};
+	
+	float m_dist{10.0f};
+	
+	sf::Vector2f m_position{0.0f, 0.0f};
+	
+	sf::Color m_color{255, 255, 255};
+	
+	name_entity nament{m_name, m_text_size, m_position, m_color};
+	
+	circle_entity circlent{m_value, m_norm_radius, m_position};
+	
+	value_entity valuent{m_value, m_text_size, m_position, m_color};
 	
 };
 

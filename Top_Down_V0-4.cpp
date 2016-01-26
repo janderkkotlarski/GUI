@@ -430,7 +430,7 @@ void journey(std::vector <float>& values, float& current, float& delta)
 int main()
 {
 	
-	const std::string program_name{"Top Down V0.3"};
+	const std::string program_name{"Top Down V0.4"};
 	
 	assert(program_name != "");
 	

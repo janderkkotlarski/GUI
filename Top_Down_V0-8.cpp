@@ -378,16 +378,27 @@ struct rectangle_entity
     
     sf::Vector2f m_position{0.0f, 0.0f};
     
+    const sf::Vector2f m_dimensions{200.0f, 100.0f};
     
-    rectangle_entity(const std::string& name, const sf::Vector2f& position);
+    const sf::Color m_color{127, 127, 63};
+    
+    sf::RectangleShape m_rectangle{m_dimensions};    
+    
+    rectangle_entity(const std::string& name, const sf::Vector2f& position,
+                     const sf::Vector2f& dimensions);
               
     ~rectangle_entity();
     
 };
 
-rectangle_entity::rectangle_entity(const std::string& name, const sf::Vector2f& position)
-    :m_name(name), m_position(position)
+rectangle_entity::rectangle_entity(const std::string& name, const sf::Vector2f& position,
+                                   const sf::Vector2f& dimensions)
+    :m_name(name), m_position(position), m_dimensions(dimensions), m_rectangle(m_dimensions)
 {
+	
+	m_rectangle.setOrigin(0.5f*m_dimensions);
+	m_rectangle.setPosition(m_position);
+	m_rectangle.setFillColor(m_color);
 		
 }
 
@@ -399,7 +410,7 @@ rectangle_entity::~rectangle_entity()
 void show_rectent(sf::RenderWindow& window, const rectangle_entity& rectent)
 {
     
-   
+   window.draw(rectent.m_rectangle);
     
 }
 
@@ -412,16 +423,24 @@ struct rectangle_collection
     
     const float m_text_size{20.0f};
     
-    const std::string m_name{"Name"};
+    const std::string m_rectangle_name{"Rectangle name"};
     
-    sf::Vector2f m_position{0.0f, 0.0f};
+    const std::string m_circle_name{"Circle name"};
     
-    rectangle_entity m_rectent{m_name, m_position};
+    const sf::Vector2f m_rectangle_position{0.0f, 0.0f};
     
-    circle_collection m_circolle{m_value, m_norm_radius, m_text_size, m_name, m_position};
+    const sf::Vector2f m_rectangle_dimensions{200.0f, 100.0f};
+    
+    sf::Vector2f m_circle_position{m_rectangle_position - 0.5f*m_rectangle_dimensions +
+	                               0.5f*sf::Vector2f(m_rectangle_dimensions.y, m_rectangle_dimensions.y)};
+    
+    rectangle_entity m_rectent{m_rectangle_name, m_rectangle_position, m_rectangle_dimensions};
+    
+    circle_collection m_circolle{m_value, m_norm_radius, m_text_size, m_circle_name, m_circle_position};
     
     rectangle_collection(const float value, const float norm_radius, const float text_size,
-                            const std::string& name, const sf::Vector2f& position);
+                            const std::string& rectangle_name, const std::string& circle_name,
+                            const sf::Vector2f& rectangle_position, const sf::Vector2f& rectangle_dimensions);
                             
     ~rectangle_collection();
 	
@@ -429,9 +448,14 @@ struct rectangle_collection
 
 
 rectangle_collection::rectangle_collection(const float value, const float norm_radius, const float text_size,
-                                   const std::string& name, const sf::Vector2f& position)
-    :m_value(value), m_norm_radius(norm_radius), m_text_size(text_size), m_name(name), m_position(position),
-    m_rectent(m_name, m_position)
+                                           const std::string& rectangle_name, const std::string& circle_name,
+                                           const sf::Vector2f& rectangle_position, const sf::Vector2f& rectangle_dimensions)
+    :m_value(value), m_norm_radius(norm_radius), m_text_size(text_size), m_rectangle_name(rectangle_name),
+    m_circle_name(circle_name), m_rectangle_position(rectangle_position), m_rectangle_dimensions(rectangle_dimensions),
+    m_circle_position(m_rectangle_position - 0.5f*m_rectangle_dimensions +
+                      0.5f*sf::Vector2f(m_rectangle_dimensions.y, m_rectangle_dimensions.y)),
+    m_rectent(m_rectangle_name, m_rectangle_position, m_rectangle_dimensions),
+    m_circolle{m_value, m_norm_radius, m_text_size, m_circle_name, m_circle_position}
      
 {
 		
@@ -445,6 +469,7 @@ rectangle_collection::~rectangle_collection()
 void show_rectcolle(sf::RenderWindow& window, const rectangle_collection& rectcolle)
 {
     
+   show_rectent(window, rectcolle.m_rectent);
    show_circolle(window, rectcolle.m_circolle);
     
 }
@@ -542,6 +567,8 @@ int main()
     
     const std::string nament_name_2{"Chiaki\nKurihara"};
     
+    const std::string nament_name_3{"Tetsuko\nKoku"};
+    
     std::vector <float> attain_values{-1000.0f, 1000.0f};
     
     const int steps{200};
@@ -552,7 +579,7 @@ int main()
     // std::cout << delta_value << ':' << delta_divider(delta_value) << '\n';
     
     const float nament_size{15.0f};
-    const float valuent_size{25.0f};
+    const float valuent_size{15.0f};
     
     const float nament_value{10000.0f};
     
@@ -572,8 +599,10 @@ int main()
     const sf::Vector2f circolle_posit{0.25f*window_sizes.x, 0.5f*window_sizes.y};
     circle_collection circolle{nament_value, norm_radius, valuent_size, nament_name, circolle_posit};
     
-    const sf::Vector2f rectent_posit_2{0.5f*window_sizes.x, 0.75f*window_sizes.y};
-    rectangle_collection rectcolle{attain_values[0], norm_radius, valuent_size, nament_name_2, rectent_posit_2};
+    const sf::Vector2f rectent_posit_2{0.25f*window_sizes.x, 0.75f*window_sizes.y};
+    const sf::Vector2f rectent_dimens{0.4f*window_sizes};
+    rectangle_collection rectcolle{attain_values[0], norm_radius, valuent_size,
+	                               nament_name_2, nament_name_3, rectent_posit_2, rectent_dimens};
                 
     while (window.isOpen())
     {

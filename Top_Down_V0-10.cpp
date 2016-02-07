@@ -50,6 +50,9 @@ name_entity::name_entity(const std::string& name, const float size, const sf::Ve
     
     assert(m_entity_name != "");    
     assert(m_text_size > 0.0f);
+    assert(m_font_name != "");
+    assert(m_position.x > 0.0f);
+    assert(m_position.y > 0.0f);
     
     if (!m_font.loadFromFile(m_font_name))
     {
@@ -138,6 +141,9 @@ value_entity::value_entity(const float value, const float size, const sf::Vector
     
     assert(m_value_name != L"");    
     assert(m_text_size > 0.0f);
+    assert(m_font_name != "");
+    assert(m_position.x > 0.0f);
+    assert(m_position.y > 0.0f);
     
     if (!m_font.loadFromFile(m_font_name))
     {
@@ -278,6 +284,10 @@ circle_entity::circle_entity(const double value, const double norm_radius, const
     :m_value(value), m_norm_radius(norm_radius), m_radius(sqrt_value_tot_radius(m_value, m_norm_radius)),
     m_position(position), m_color(value_to_color(m_value)), m_circle(m_radius)
 {
+	
+	assert(m_norm_radius > 0.0f);
+	assert(m_position.x > m_radius);
+	assert(m_position.y > m_radius);
     
     set_circle(m_circle, m_value, m_norm_radius, m_position, m_color);
 
@@ -354,6 +364,15 @@ circle_collection::circle_collection(const float value, const float norm_radius,
     m_circlent(m_value, m_norm_radius, m_position),
     m_valuent(m_value, m_text_size, m_position + m_jump, m_color)
 {
+     
+    assert(m_name != "");
+    assert(m_norm_radius > 0.0f);
+	assert(m_text_size > 0.0f);	
+	assert(m_circle_mult > 0.0f);
+	assert(m_text_mult > 0.0f);
+	assert(m_position.x > sqrt_value_tot_radius(m_value, m_norm_radius));
+	assert(m_position.y > sqrt_value_tot_radius(m_value, m_norm_radius));
+	
         
 }
 
@@ -395,6 +414,12 @@ rectangle_entity::rectangle_entity(const std::string& name, const sf::Vector2f& 
                                    const sf::Vector2f& dimensions)
     :m_name(name), m_position(position), m_dimensions(dimensions), m_rectangle(m_dimensions)
 {
+	
+	assert(m_name != "");	
+	assert(m_dimensions.x > 0.0f);
+	assert(m_dimensions.y > 0.0f);
+	assert(m_position.x > 0.5f*m_dimensions.x);
+	assert(m_position.y > 0.5f*m_dimensions.y);
 	
 	m_rectangle.setOrigin(0.5f*m_dimensions);
 	m_rectangle.setPosition(m_position);
@@ -470,6 +495,19 @@ rectangle_collection::rectangle_collection(const float value, const float norm_r
     m_circolle{m_value, m_norm_radius, m_text_size, m_circle_name, m_circle_position}
      
 {
+	
+	assert(m_rectangle_name != "");
+	assert(m_circle_name != "");
+	assert(m_norm_radius > 0.0f);
+	assert(m_text_size > 0.0f);	
+	assert(m_rectangle_dimensions.x > 0.0f);
+	assert(m_rectangle_dimensions.y > 0.0f);
+	assert(m_rectangle_position.x > 0.5f*m_rectangle_dimensions.x);
+	assert(m_rectangle_position.y > 0.5f*m_rectangle_dimensions.y);
+	assert(m_rectangle_mult > 0.0f);
+	assert(m_text_mult > 0.0f);
+	assert(m_circle_position.x > 0.5f*m_rectangle_dimensions.x);
+	assert(m_circle_position.y > 0.5f*m_rectangle_dimensions.y);
 		
 }
 
@@ -545,7 +583,7 @@ void journey(std::vector <float>& values, float& current, float& delta)
 int main()
 {
     
-    const std::string program_name{"Top Down V0.7"};
+    const std::string program_name{"Top Down V0.10"};
     
     assert(program_name != "");
     
